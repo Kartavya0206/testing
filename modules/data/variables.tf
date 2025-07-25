@@ -9,7 +9,7 @@ variable "name-prefix" {
   default     = ""
 }
 
-variable "resource_group_name" {
+variable "sql_resource_group_name" {
   type        = string
   description = "Name of the resource group"
 }
@@ -45,17 +45,7 @@ variable "sql_databases" {
   description = "List of SQL databases with individual configs"
 }
 
-variable "tags" {
-  type        = map(string)
-  default     = {}
-  description = "Tags for resources"
-}
 
-variable "location" {
-  description = "Location for the resources"
-  type        = string
-  default     = ""
-}
 variable "name-prefix" {
   description = "Prefix for resource names"
   type        = string
@@ -102,11 +92,11 @@ variable "admin_password" {
   description = "The admin password for the virtual machine"
   type        = string
 }
-variable "subnet_id" {
+variable "df_subnet_id" {
   description = "The ID of the subnet for the Data Factory"
   type        = string
 }
-variable "vnet_id" {
+variable "df_vnet_id" {
   description = "The ID of the virtual network for the Data Factory"
   type        = string
 }
@@ -134,7 +124,7 @@ variable "redis_name" {
   description = "Name of the Redis Enterprise Cluster"
 }
 
-variable "sku_name" {
+variable "redis_sku_name" {
   type        = string
   description = "SKU name (e.g., 'Enterprise_E10')"
 }
@@ -160,12 +150,12 @@ variable "pe_name" {
   description = "Name of the Private Endpoint"
 }
 
-variable "subnet_id" {
+variable "redis_subnet_id" {
   type        = string
   description = "Subnet ID to attach resources to"
 }
 
-variable "vnet_id" {
+variable "redis_vnet_id" {
   type        = string
   description = "Virtual network ID for the VNet link"
 }

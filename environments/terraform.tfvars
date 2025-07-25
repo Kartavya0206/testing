@@ -2,90 +2,8 @@ location = "Central India"
 name-prefix = "zynbit-strateu"
 sql_resource_group_name = "default-sql-centralindia"
 
-#Redis Enterprise
-redis_resource_group_name = "strateu-rg"
 
-redis_name              = "cirrus-stratus-redis-enterprise"
-sku_name                = "Enterprise_E20-20"
-zones                   = ["1"]
-
-nic_name                = "stratus.nic.8cb56f21-75e4-4d70-8c43-6ffa129cd4d6"
-private_dns_zone_name   = "privatelink.redisenterprise.cache.azure.net"
-pe_name                 = "stratus"
-subnet_id               = "/subscriptions/xxxxx/resourceGroups/strateu-rg/providers/Microsoft.Network/virtualNetworks/strateu-vnet/subnets/redis-subnet"
-vnet_id                 = "/subscriptions/xxxxx/resourceGroups/strateu-rg/providers/Microsoft.Network/virtualNetworks/strateu-vnet"
-
-#Data Factory
-df_resource_group_name    = "ZYNBIT-STRATUEU-DATA-FACTORY"
-df_identity_name          = "data-factory"
-storage_account_name      = "strateudf"
-os_type                   = "Windows"
-version                   = "WindowsServer:2022-Datacenter"
-df_nic_name               = "strateu-df-data-factory-nic"
-df_nsg_name               = "strateu-df-integrated-runtime-nsg"
-df_public_ip_name         = "strateu-df-integrated-runtime-pip"
-df_vm_name                = "strateu-df-integrated-runtime"
-df_size                   = "Standard_A2_v2"  
-admin_username            = "adminuser"
-admin_password            = "P@ssword1234!" 
-# subnet_id               = "/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Network/virtualNetworks/xxx/subnets/xxx"
-# vnet_id                 = "/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Network/virtualNetworks/xxx"
-df_pe_name                = "strateu-data-factory-pe"
-    os_disk = {
-      disk_type     = "Standard_LRS"
-      disk_size_gb  = 127
-    }
-
-tags = {
-  project     = "df-deployment"
-  environment = "dev"
-}
-
-#eventgrid
-comm_service_resource_group_name = "communication"
-
-
-communication_service_name    = "comms"
-communication_data_location   = "Europe" 
-
-eventgrid_topic_name          = "cirrus-stratus-comms"
-eventgrid_source_id           = "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/cirrus-stratus-communication/providers/Microsoft.Communication/communicationServices/cirrus-stratus-comms"
-eventgrid_topic_type          = "Microsoft.Communication.CommunicationServices"
-identity_name                 = "comms"
-
-#Key vault 
-kv_resource_group_name        = "default-storage-northeu"
-
-tenant_id                 = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"  #variable in azure devops
-object_id                 = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"  #variable in azure devops
-
-key_vault_name            = "zynbit-keyvault-prod"
-storage_account_1_name    = "portalvhds3hdvrg1p0xds4"
-storage_account_2_name    = "zynbitproduction"
-
-#Service Bus
-servicebus_resource_group_name = "service-bus"
-
-
-servicebus_capacity           = 1
-sku                           = "Premium"
-autoscale_setting_name        = "sb-autoscale"
-autoscale_minimum_capacity    = "1"
-autoscale_default_capacity    = "1"
-autoscale_maximum_capacity    = "3"
-autoscale_incoming_threshold  = 1000
-
-#network
-# ---------------------------------------------
-# General Network Configuration
-
-allocation_method = "Dynamic"  # IP allocation method: Dynamic or Static
-
-# Key identifiers for Virtual Networks (used in other resources)
-vnet_scope_key = "zynbit-prod-scope-vnet"  # Main app deployment VNet
-vnet_hub_key   = "zynbit-prod-hub-vnet"    # Application Gateway VNet
-vnet_atlas_key = "atlas-vnet"              # Peering VNet
-
+#NETWORK
 # ---------------------------------------------
 #  Application Gateway Configuration
 
@@ -297,6 +215,94 @@ vnets = {
 }
 
 
+#----------------------------------------------
+
+#Redis Enterprise
+redis_resource_group_name = "strateu-rg"
+
+redis_name              = "cirrus-stratus-redis-enterprise"
+sku_name                = "Enterprise_E20-20"
+zones                   = ["1"]
+
+nic_name                = "stratus.nic.8cb56f21-75e4-4d70-8c43-6ffa129cd4d6"
+private_dns_zone_name   = "privatelink.redisenterprise.cache.azure.net"
+pe_name                 = "stratus"
+subnet_id               = "/subscriptions/xxxxx/resourceGroups/strateu-rg/providers/Microsoft.Network/virtualNetworks/strateu-vnet/subnets/redis-subnet"
+vnet_id                 = "/subscriptions/xxxxx/resourceGroups/strateu-rg/providers/Microsoft.Network/virtualNetworks/strateu-vnet"
+
+#Data Factory
+df_resource_group_name    = "ZYNBIT-STRATUEU-DATA-FACTORY"
+df_identity_name          = "data-factory"
+storage_account_name      = "strateudf"
+os_type                   = "Windows"
+version                   = "WindowsServer:2022-Datacenter"
+df_nic_name               = "strateu-df-data-factory-nic"
+df_nsg_name               = "strateu-df-integrated-runtime-nsg"
+df_public_ip_name         = "strateu-df-integrated-runtime-pip"
+df_vm_name                = "strateu-df-integrated-runtime"
+df_size                   = "Standard_A2_v2"  
+admin_username            = "adminuser"
+admin_password            = "P@ssword1234!" 
+# subnet_id               = "/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Network/virtualNetworks/xxx/subnets/xxx"
+# vnet_id                 = "/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Network/virtualNetworks/xxx"
+df_pe_name                = "strateu-data-factory-pe"
+    os_disk = {
+      disk_type     = "Standard_LRS"
+      disk_size_gb  = 127
+    }
+
+tags = {
+  project     = "df-deployment"
+  environment = "dev"
+}
+
+#eventgrid
+comm_service_resource_group_name = "communication"
+
+
+communication_service_name    = "comms"
+communication_data_location   = "Europe" 
+
+eventgrid_topic_name          = "cirrus-stratus-comms"
+eventgrid_source_id           = "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/cirrus-stratus-communication/providers/Microsoft.Communication/communicationServices/cirrus-stratus-comms"
+eventgrid_topic_type          = "Microsoft.Communication.CommunicationServices"
+identity_name                 = "comms"
+
+#Key vault 
+kv_resource_group_name        = "default-storage-northeu"
+
+tenant_id                 = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"  #variable in azure devops
+object_id                 = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"  #variable in azure devops
+
+key_vault_name            = "zynbit-keyvault-prod"
+storage_account_1_name    = "portalvhds3hdvrg1p0xds4"
+storage_account_2_name    = "zynbitproduction"
+
+#Service Bus
+servicebus_resource_group_name = "service-bus"
+
+
+servicebus_capacity           = 1
+sku                           = "Premium"
+autoscale_setting_name        = "sb-autoscale"
+autoscale_minimum_capacity    = "1"
+autoscale_default_capacity    = "1"
+autoscale_maximum_capacity    = "3"
+autoscale_incoming_threshold  = 1000
+
+#network
+# ---------------------------------------------
+# General Network Configuration
+
+allocation_method = "Dynamic"  # IP allocation method: Dynamic or Static
+
+# Key identifiers for Virtual Networks (used in other resources)
+vnet_scope_key = "zynbit-prod-scope-vnet"  # Main app deployment VNet
+vnet_hub_key   = "zynbit-prod-hub-vnet"    # Application Gateway VNet
+vnet_atlas_key = "atlas-vnet"              # Peering VNet
+
+
+
 #Automation Account
 
 selected_vm_name = "ZYNBIT-STRATUEU-AUTOMATION"  # should match one key in your var.vms
@@ -322,3 +328,12 @@ bing_resource_group_name       = "rg-bing-grounding"
 bing_grounding_search_name     = "bing-grounding-sample"
 sku_name_bing                  = "S1"
 
+
+#Log analytics Workspace
+log_analytics_workspace_name = "my-log-workspace"
+log_analytics_workspace_rg   = "my-monitor-rg"
+resource_ids_to_monitor = [
+  "/subscriptions/xxxx/resourceGroups/my-rg/providers/Microsoft.Compute/virtualMachines/vm1",
+  "/subscriptions/xxxx/resourceGroups/my-rg/providers/Microsoft.Web/sites/appservice1",
+  "/subscriptions/xxxx/resourceGroups/my-rg/providers/Microsoft.Storage/storageAccounts/mystorage1"
+]
