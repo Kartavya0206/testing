@@ -337,3 +337,55 @@ resource_ids_to_monitor = [
   "/subscriptions/xxxx/resourceGroups/my-rg/providers/Microsoft.Web/sites/appservice1",
   "/subscriptions/xxxx/resourceGroups/my-rg/providers/Microsoft.Storage/storageAccounts/mystorage1"
 ]
+# Provide a resource group for Log Analytics so it is not blank
+log_analytics_resource_group_name = "rg-monitoring-prod-demo-cind"
+
+############ Managed Identities ##################
+managed_identities = [
+  {
+    name                   = "Stratus-eu-auto-sync"
+    mi_resource_group_name = "Stratus-eu-auto-sync"
+    location               = "North Europe"
+  },
+  {
+    name                   = "Stratus-eu-crm-api"
+    mi_resource_group_name = "Stratus-eu-crm-api"
+    location               = "North Europe"
+  },
+   {
+    name                   = "Stratus-eu-dataretention"
+    mi_resource_group_name = "Stratus-eu-data-retention"
+    location               = "North Europe"
+
+  },
+  {
+    name                   = "Stratus-eu-kv-secret"
+    mi_resource_group_name = "Stratus-eu-keyvault2"
+    location               = "North Europe"
+  },
+  {
+    name                   = "Stratus-eu-kv"
+    mi_resource_group_name = "Stratus-eu-keyvault1"
+    location               = "North Europe"
+  },
+  {
+    name                   = "stratus-eu-notifications"
+    mi_resource_group_name = "Stratus-eu-notifications"
+    location               = "North Europe"
+  },
+  {
+    name                   = "stratus-eu-webhooks"
+    mi_resource_group_name = "Stratus-eu-webhooks"
+    location               = "North Europe"
+  },
+  {
+    name                   = "stratus-eu-comms"
+    mi_resource_group_name = "Stratus-eu-communication"
+    location               = "North Europe"
+  },
+  {
+    name                   = "stratus-eu-research-ai"
+    mi_resource_group_name = "Stratus-eu-research-ai"
+    location               = "North Europe"
+  }
+]
