@@ -10,8 +10,6 @@ module "compute" {
   function_apps           = var.function_apps
   vms                     = var.vms
   tags                    = var.tags
-  vmss                    = var.vmss
-
 }
 
 # === Containers Modules ===
@@ -161,6 +159,10 @@ module "network" {
   backend_host             = var.backend_host
   frontdoor_name           = var.frontdoor_name
   frontdoor_resource_group_name = var.frontdoor_resource_group_name
-  
+  public_ips               = var.public_ips
+  create_new_resources     = var.create_new_resources
+  project_name              = var.project_name
+  environment              = var.environment
+  tags                     = var.tags
 }
 
