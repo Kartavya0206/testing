@@ -370,8 +370,30 @@ variable "key_vault_name" {
   description = "Name of the Key Vault"
   type        = string
 }
+variable "vault_resource_group_name" {
+  description = "Name of the resource group for the Key Vault"
+  type        = string
+}
 
+variable "subscription_id" {
+  description = "Azure Subscription ID"
+  type        = string
+  
+}
+variable "environment" {
+  description = "Deployment environment (e.g., dev, prod)"
+  type        = string
+}
 
+variable "project_name" {
+  description = "Name of the project"
+  type        = string
+  
+}
+variable "aks_resource_group_name" {
+  description = "Name of the resource group for AKS"
+  type        = string
+}
 variable "servicebus_namespace_name" {
   type        = string
   description = "Service Bus Namespace name"
@@ -489,6 +511,11 @@ variable "log_analytics_workspace_name" {
 }
 variable "log_analytics_workspace_rg" {
     description = "The resource group of the Log Analytics workspace"
+}
+variable "log_analytics_resource_group_name" {
+  description = "The resource group name for Log Analytics"
+  type        = string
+  
 }
 variable "resource_ids_to_monitor" {
   type = list(string)
@@ -638,4 +665,78 @@ variable "dns_vnet_links" {
     registration     = bool
     tags             = map(string)  # <-- Add this line
   }))
+}
+# Front Door Configuration
+variable "frontdoor_name" {
+  description = "The name of the Azure Front Door profile"
+  type        = string
+}
+
+variable "frontdoor_resource_group_name" {
+  description = "The resource group to deploy the Azure Front Door profile"
+  type        = string
+}
+
+variable "backend_host" {
+  description = "The backend hostname for origin"
+  type        = string
+}
+
+variable "backend_address" {
+  description = "The backend address for origin (optional, only needed if not using backend_host as DNS)"
+  type        = string
+  default     = ""
+}
+
+
+########### NSG Variables ##############
+variable "network_resource_group_name" {
+  description = "Name of the resource group for network resources"
+  type        = string
+}
+variable "tags" {
+  description = "Tags to be applied to resources"
+  type        = map(string)
+  default     = {}
+}
+variable "create_new_resources" {
+  description = "Flag to determine if new resources should be created"
+  type        = bool
+  default     = true
+}
+variable "nsg_rules" {
+  description = "List of NSG rules to create"
+  type = list(object({
+    name                       = string
+    priority                   = number
+    direction                  = string
+    access                     = string
+    protocol                   = string
+    source_port_range          = string
+    destination_port_range     = string
+    source_address_prefix      = string
+    destination_address_prefix = string
+  }))
+  default = []
+}
+
+############# Public IP Variables ##############
+variable "public_ips" {
+  description = "A map of Public IP configurations."
+  type = map(object({
+    resource_group_name   = string
+    public_ip_name        = string
+    allocation_method     = string
+    sku_name              = string
+    ip_version            = string
+    zones                 = list(string)
+  }))
+}
+variable "project_name" {
+  description = "The name of the project."
+  type        = string
+}
+variable "environment" {
+  description = "The deployment environment (e.g., dev, prod)."
+  type        = string
 }

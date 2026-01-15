@@ -301,6 +301,15 @@ vnet_scope_key = "zynbit-prod-scope-vnet"  # Main app deployment VNet
 vnet_hub_key   = "zynbit-prod-hub-vnet"    # Application Gateway VNet
 vnet_atlas_key = "atlas-vnet"              # Peering VNet
 
+#frontdoor
+frontdoor_name                  = "STRATUS-EU-FRONTDOOR"
+frontdoor_resource_group_name   = "STRATUS-EU-FRONTDOOR-RG"
+backend_host                    = "stratus-eu-example.azurewebsites.net"
+backend_address                 = ""
+
+#NSG 
+network_resource_group_name = "Stratus-eu-nsg-rg"
+
 
 
 #Automation Account
@@ -389,3 +398,16 @@ managed_identities = [
     location               = "North Europe"
   }
 ]
+
+#######public ip for bastion and lb ##########
+public_ips = {
+  appgw = {
+    resource_group_name = "rg-network-prod-ashoka-cind"
+    public_ip_name      = "pip-prod-ashoka-cind"
+    allocation_method   = "Static"
+    sku_name            = "Standard"
+    ip_version          = "IPv4"
+    zones               = []
+
+  }
+}

@@ -97,6 +97,12 @@ module "automation_account" {
   autoscale_maximum_capacity      = var.autoscale_maximum_capacity
   autoscale_incoming_threshold    = var.autoscale_incoming_threshold
   sku                             = var.sku
+  create_new_resources           = var.create_new_resources
+  vault_resource_group_name       = var.vault_resource_group_name
+  subscription_id                = var.subscription_id
+  environment                   = var.environment
+  project_name                   = var.project_name
+  aks_resource_group_name        = var.aks_resource_group_name
 
 }
 
@@ -108,6 +114,12 @@ module "monitor" {
   log_analytics_workspace_rg    = var.log_analytics_workspace_rg
   resource_ids_to_monitor       = var.resource_ids_to_monitor
   location                      = var.location
+  log_analytics_resource_group_name = var.log_analytics_resource_group_name
+  environment                   = var.environment
+  project_name                  = var.project_name
+  subscription_id                 = var.subscription_id
+  tags =       var.tags
+ 
 }
 
 # === Network Modules ===
@@ -144,5 +156,10 @@ module "network" {
   location                 = var.location
   allocation_method        = var.allocation_method
   date_created             = var.date_created
+  network_resource_group_name = var.network_resource_group_name
+  backend_host             = var.backend_host
+  frontdoor_name           = var.frontdoor_name
+  frontdoor_resource_group_name = var.frontdoor_resource_group_name
+  
 }
 
