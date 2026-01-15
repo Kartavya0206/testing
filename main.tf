@@ -10,6 +10,7 @@ module "compute" {
   function_apps           = var.function_apps
   vms                     = var.vms
   tags                    = var.tags
+  vmss                    = var.vmss
 
 }
 

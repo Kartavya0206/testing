@@ -43,6 +43,29 @@ variable "vms" {
   }))
 }
 
+#vmss
+variable "vmss" {
+  description = "Map of Virtual Machine Scale Sets to create"
+  type = map(object({
+    resource_group = string
+    name           = string
+    sku            = string
+    admin_username = string
+    admin_password = string
+    offer          = string
+    image_sku      = string
+    os_disk = object({
+      disk_type = string
+      disk_size_gb = number
+    })
+  }))
+}
+variable "capacity" {
+  description = "Default capacity for VMSS autoscaling"
+  type        = number
+  default     = 2
+}
+
 #apps service plans and apps
 
 
