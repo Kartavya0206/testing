@@ -153,8 +153,28 @@ variable "redis_vnet_id" {
 }
 
 #variable for postgresql
-variable "pst_rg_name" {
+variable "psg_rg_name" {
   description = "Name of the resource group for PostgreSQL flexible server"
   type        = string
-
+}
+variable "psg_server_name" {
+  description = "Name of the PostgreSQL flexible server"
+  type        = string
+}
+variable "psg_admin_login" {
+  description = "Admin login for PostgreSQL flexible server"
+  type        = string
+}
+variable "psg_admin_password" {
+  description = "Admin password for PostgreSQL flexible server"
+  type        = string
+  sensitive   = true
+}
+variable "psg_sku_name" {
+  description = "SKU name for PostgreSQL flexible server"
+  type        = string
+}
+variable "psg_database_name" {
+  description = "Name of the PostgreSQL database"
+  type        = string
 }

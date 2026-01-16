@@ -62,6 +62,12 @@ module "datafactory" {
   sql_admin_password         = var.sql_admin_password
   sql_databases              = var.sql_databases
   tags                       = var.tags
+  psg_rg_name                = var.psg_rg_name
+  psg_server_name            = var.psg_server_name
+  psg_admin_login            = var.psg_admin_login
+  psg_admin_password         = var.psg_admin_password
+  psg_sku_name               = var.psg_sku_name
+  psg_database_name          = var.psg_database_name
 }
 
 # === Identity & Governance Modules ===

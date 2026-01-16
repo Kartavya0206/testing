@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "psg_rg" {
-  name     = var.pst_rg_name
+  name     = var.psg_rg_name
   location = var.location
 }
 
