@@ -9,6 +9,7 @@ module "compute" {
   app_services            = var.app_services
   function_apps           = var.function_apps
   vms                     = var.vms
+  vmss                    = var.vmss
   tags                    = var.tags
 }
 
@@ -160,9 +161,14 @@ module "network" {
   frontdoor_name           = var.frontdoor_name
   frontdoor_resource_group_name = var.frontdoor_resource_group_name
   public_ips               = var.public_ips
-  create_new_resources     = var.create_new_resources
+  shared_keys               = var.shared_keys
+  region_prefix              = var.region_prefix
+  s2s_configs               = var.s2s_configs  
+  create_new_resources      = var.create_new_resources
   project_name              = var.project_name
-  environment              = var.environment
-  tags                     = var.tags
+  resource_group_name       = var.resource_group_name
+  express_routes            = var.express_routes
+  environment               = var.environment
+   tags                     = var.tags
 }
 

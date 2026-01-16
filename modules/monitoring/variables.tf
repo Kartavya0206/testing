@@ -41,6 +41,3 @@ variable "log_analytics_workspace_rg" {
 variable "resource_ids_to_monitor" {
   type = list(string)
 }
-variable "location" {
-    description = "The location of the resources"
-}

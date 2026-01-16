@@ -214,12 +214,6 @@ variable "aks_resource_group_name" {
   description = "Name of the resource group where AKS is created"
   type        = string
 }
-
-variable "location" {
-  description = "Azure region for resources"
-  type        = string
-}
-
 variable "environment" {
   description = "Environment name (dev, staging, prod)"
   type        = string
@@ -274,12 +268,6 @@ variable "enable_defender_for_databases" {
   description = "Enable Defender for SQL Databases"
   type        = bool
   default     = true
-}
-
-variable "tags" {
-  description = "Tags to be applied to all resources"
-  type        = map(string)
-  default     = {}
 }
 variable "vault_resource_group_name" {
   description = "Name of the resource group for Recovery Services Vault"

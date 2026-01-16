@@ -42,3 +42,7 @@ output "nat_gateway_associated_subnets" {
   }
 }
 
+output "express_route_ids" {
+  value = [for er in azurerm_express_route_circuit.erc : er.id]
+}
+

@@ -37,6 +37,10 @@ resource "azurerm_virtual_network" "vnet" {
   location            = var.location
   resource_group_name = azurerm_resource_group.vnet-rg[each.value.rg_name].name
   address_space       = each.value.address_space
+  ddos_protection_plan {
+    id     = azurerm_network_ddos_protection_plan.ddos.id
+    enable = true
+  }
 
   tags = merge(
     each.value.tags,

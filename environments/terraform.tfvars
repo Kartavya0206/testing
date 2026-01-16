@@ -411,3 +411,37 @@ public_ips = {
 
   }
 }
+######## VPN  ###########################
+vpn_gateway_name    = "strateu-vpn-gateway"
+resource_group_name = "rg-demo-prod"
+
+s2s_configs = {
+#  HC1 = {
+#    local_gateway_name = "HC1"
+#    local_gateway_ip   = "64.78.185.20"
+#    address_space      = ["10.7.0.0/16", "10.15.0.0/16"]
+#  }
+  HC2 = {
+    local_gateway_name = "HC2"
+    local_gateway_ip   = "212.83.209.154"
+    address_space      = ["10.8.0.0/16", "10.14.0.0/16", "10.80.0.0/16", "10.15.0.0/16","10.7.0.0/16"]
+    pfs_group          = "PFS14"
+  }
+  VPN_US_WEST3 = {
+    local_gateway_name = "VPN_US_WEST3"
+    local_gateway_ip   = "20.172.18.11"
+    address_space      = ["172.16.250.0/24", "172.16.251.0/24"]
+    pfs_group          = "PFS24"
+  }
+  VPN_EU_WESTEUROPE = {
+    local_gateway_name = "VPN_EU_WESTEUROPE"
+    local_gateway_ip   = "172.201.208.233"
+    address_space      = ["172.16.252.0/24", "172.16.253.0/24"]
+    pfs_group          = "PFS24"
+  }
+}
+storage_account_id  = ""
+log_analytics_workspace_id = "113b9263-d9b8-4fee-9e05-1f2f57d365b9"
+log_analytics_resource_id  = "/subscriptions/c99e507d-dd73-4894-8105-2498c63f4708/resourceGroups/westeurope-networkwatcher-logs-rg/providers/Microsoft.OperationalInsights/workspaces/WestEurope-NetworkWatcher-Logs"
+
+        
