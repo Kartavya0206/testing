@@ -11,7 +11,9 @@ module "compute" {
   vms                     = var.vms
   tags                    = var.tags
   vmss                    = var.vmss
-
+  avd                     = var.avd
+  
+ 
 }
 
 # === Containers Modules ===
@@ -21,6 +23,10 @@ module "containers" {
   container_app_environments   = var.container_app_environments
   container_apps               = var.container_apps
   tags                         = var.tags
+  aks_resource_group_name      = var.aks_resource_group_name
+  prefix                       = var.prefix
+  default_node_pool_config      = var.default_node_pool_config
+  subnet_id                    = var.subnet_id
 }
 
 # === Data Modules ===

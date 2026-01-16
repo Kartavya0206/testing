@@ -134,3 +134,30 @@ variable "capacity" {
   default     = 2
 }
 
+#varible for AVD
+variable "rg_name" {
+description = "resource group for avd"
+type = string
+default = "avd-rg"
+}
+variable "workspace" {
+description = "avd workspace name"
+type = string
+default = "avd-workspace"
+}
+variable "prefix" {
+description = "prefix for avd resources"
+type = string
+default = "avd"
+}
+variable "hostpool"{
+description = "avd hostpool name"
+type = string
+default = "avd-hostpool" 
+}
+variable "dag" {
+description = "avd dag name"  
+type = string
+default = "avd-dag"
+}
+
