@@ -5,13 +5,13 @@ module "compute" {
   ai_resource_group_name  = var.ai_resource_group_name
   ai_foundry_name         = var.ai_foundry_name
   ai_foundry_project_name = var.ai_foundry_project_name
-  app_service_plans       = var.app_service_plans
   app_services            = var.app_services
   function_apps           = var.function_apps
   vms                     = var.vms
   tags                    = var.tags
   vmss                    = var.vmss
   
+
 }
 
 # === Containers Modules ===

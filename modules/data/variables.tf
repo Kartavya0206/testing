@@ -159,3 +159,10 @@ variable "redis_vnet_id" {
   type        = string
   description = "Virtual network ID for the VNet link"
 }
+
+#variable for postgresql
+variable "pst_rg_name" {
+  description = "Name of the resource group for PostgreSQL flexible server"
+  type        = string
+
+}

@@ -38,19 +38,25 @@ variable "vms" {
 #apps service plans and apps
 
 
-variable "app_service_plans" {
-  description = "List of app service plans to create"
-  type = list(object({
-    name                = string
-    resource_group_name = string
-    sku_tier            = string
-    sku_size            = string
-    sku_capacity        = number
-    kind                = string
-    per_site_scaling    = optional(bool, false)
-    is_xenon            = optional(bool, false)
-    reserved            = optional(bool, false) # for Linux
-  }))
+variable "app_service_plan_resource_group_name" {
+  description = "Resource group name for the App Service Plan"
+  type        = string
+  default     = "app-service-rg"
+}
+variable "app_service_plan_name" {
+  description = "Name of the App Service Plan"
+  type        = string
+  default     = "app-service-plan"
+}
+variable "os_type"{
+  description = "Operating system type for App Service Plan"
+  type        = string
+  default     = "Windows"
+}
+variable "sku_name" {
+  description = "SKU name for App Service Plan"
+  type        = string
+  default     = "S1"
 }
 
 variable "app_services" {
