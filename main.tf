@@ -11,9 +11,7 @@ module "compute" {
   vms                     = var.vms
   tags                    = var.tags
   vmss                    = var.vmss
-  avd                     = var.avd
   
- 
 }
 
 # === Containers Modules ===
