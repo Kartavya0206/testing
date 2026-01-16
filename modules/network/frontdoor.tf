@@ -10,11 +10,7 @@ resource "azurerm_cdn_frontdoor_profile" "fd_profile" {
   name                = var.frontdoor_name
   resource_group_name = azurerm_resource_group.fd_rg[0].name
   sku_name            = "Premium_AzureFrontDoor"   
-
-  identity {
-    type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.frontdoor_identity[0].id]
-  }
+  tags                = var.tags
 }
 
 resource "azurerm_cdn_frontdoor_endpoint" "fd_endpoint" {

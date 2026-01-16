@@ -828,7 +828,7 @@ variable "network_resource_group_name" {
   description = "Name of the resource group for network resources"
   type        = string
 }
-variable "tags" {
+variable "names" {
   description = "Tags to be applied to resources"
   type        = map(string)
   default     = {}
@@ -866,11 +866,66 @@ variable "public_ips" {
     zones                 = list(string)
   }))
 }
-variable "project_name" {
-  description = "The name of the project."
+
+########## vpn Variables ################
+variable "name" {
   type        = string
+  description = "Resource name"
 }
-variable "environment" {
-  description = "The deployment environment (e.g., dev, prod)."
+variable "local_gateway_name" {
   type        = string
+  description = "Name of the local gateway"
+}
+variable "region_prefix" {
+  type        = string
+  description = "Prefix for the region used in naming"
+}
+variable "s2s_configs" {
+  description = "Map of Site-to-Site VPN configurations"
+  type = map(object({
+    local_gateway_name = string
+    local_gateway_ip   = string
+    address_space      = list(string)
+    pfs_group          = string
+  }))
+}
+variable "shared_keys" {
+  description = "Map of shared keys for each Site-to-Site VPN connection"
+  type        = map(string)
+}
+######### DDoS Protection Variables ##########
+variable "location" {
+  type = string
+}
+
+variable "resource_group_name" {
+  type = string
+}
+
+variable "vnets" {
+  type = map(object({
+    name                = string
+    resource_group_name = string
+    address_space       = list(string)
+  }))
+}
+##########ExpressRoute Variables ##########
+variable "location" {
+  type = string
+}
+
+variable "resource_group_name" {
+  type = string
+}
+
+variable "express_routes" {
+  type = map(object({
+    name                 = string
+    service_provider     = string
+    peering_location     = string
+    bandwidth_in_mbps    = number
+    sku_tier             = string
+    sku_family           = string
+    allow_classic_ports  = bool
+  }))
 }

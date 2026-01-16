@@ -1,4 +1,4 @@
-resource "azurerm_resource_group" "rg" {
+resource "azurerm_resource_group" "rg-redis" {
   name     = var.redis_resource_group_name
   location = var.location
 }

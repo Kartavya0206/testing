@@ -1,4 +1,4 @@
-resource "azurerm_resource_group" "rg" {
+resource "azurerm_resource_group" "rg-sql" {
   name     = var.sql_resource_group_name
   location = var.location
 }

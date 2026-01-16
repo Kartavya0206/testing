@@ -44,14 +44,6 @@ variable "sql_databases" {
   }))
   description = "List of SQL databases with individual configs"
 }
-
-
-variable "name-prefix" {
-  description = "Prefix for resource names"
-  type        = string
-  default     = ""
-}
-
 variable "df_resource_group_name" {
   type        = string
   description = "The name of the resource group"

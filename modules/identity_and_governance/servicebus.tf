@@ -1,4 +1,4 @@
-resource "azurerm_resource_group" "rg" {
+resource "azurerm_resource_group" "rg-service-bus" {
   name     = "${var.name-prefix}-${var.servicebus_resource_group_name}"
   location = var.location
 }
