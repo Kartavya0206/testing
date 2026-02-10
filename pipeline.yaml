@@ -27,6 +27,9 @@ stages:
         - Agent.Name -equals testingvm
 
     steps:
+    - checkout: self
+      displayName: Checkout Self Repository
+
     - checkout: terraform-modules
       displayName: Checkout Terraform Modules
 
@@ -34,8 +37,8 @@ stages:
         $modules = "${{ parameters.modules }}".Split(",")
         Write-Host "Modules to fetch: $($modules -join ', ')"
 
-        # In multi-repo checkout, the resource repo lives under $(Pipeline.Workspace)\s\<alias>
-        $sourceRoot = "$(Pipeline.Workspace)\s\terraform-modules\modules"
+        # In multi-repo checkout, the self repo lives under $(Pipeline.Workspace)\s
+        $sourceRoot = "$(Pipeline.Workspace)\s\modules"
         $destinationRoot = "$(Pipeline.Workspace)\s\selected-modules"
 
         if (-not (Test-Path $sourceRoot)) {
