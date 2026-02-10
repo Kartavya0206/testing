@@ -9,7 +9,7 @@ parameters:
 - name: modules
   displayName: "Modules needed for this client (comma-separated)"
   type: string
-  default: "network,compute"
+  default: "security"
 
 resources:
   repositories:
