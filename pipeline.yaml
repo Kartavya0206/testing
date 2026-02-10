@@ -10,8 +10,8 @@ resources:
   repositories:
     - repository: terraform-modules
       type: github
-      name: Kartavya0206/test
-      endpoint: DevOps-demo
+      name: Kartavya0206/testing
+      endpoint: github.com_Kartavya0206
       ref: refs/heads/main
 
 stages:
