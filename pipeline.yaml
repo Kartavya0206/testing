@@ -1,0 +1,125 @@
+trigger: none
+
+parameters:
+- name: modules
+  displayName: "Modules to fetch (comma-separated)"
+  type: string
+  default: "network,compute"
+
+resources:
+  repositories:
+    - repository: terraform-modules
+      type: github
+      name: Kartavya0206/test
+      endpoint: DevOps-demo
+      ref: refs/heads/main
+
+stages:
+- stage: Fetch_Modules
+  displayName: Fetch Selected Terraform Modules
+  jobs:
+  - job: Fetch
+    displayName: Copy Selected Modules
+    pool:
+      name: Windows-SelfHosted
+      demands:
+        - Agent.Name -equals testingvm
+
+    steps:
+    - checkout: terraform-modules
+      displayName: Checkout Terraform Modules
+
+    - powershell: |
+        $modules = "${{ parameters.modules }}".Split(",")
+        Write-Host "Modules to fetch: $($modules -join ', ')"
+
+        # In multi-repo checkout, the resource repo lives under $(Pipeline.Workspace)\s\<alias>
+        $sourceRoot = "$(Pipeline.Workspace)\s\terraform-modules\modules"
+        $destinationRoot = "$(Pipeline.Workspace)\s\selected-modules"
+
+        if (-not (Test-Path $sourceRoot)) {
+            Write-Error "Modules directory not found"
+            exit 1
+        }
+
+        Write-Host "`n Available modules:"
+        Get-ChildItem $sourceRoot -Directory | ForEach-Object { Write-Host "  - $($_.Name)" }
+
+        New-Item -ItemType Directory -Force -Path $destinationRoot | Out-Null
+
+        foreach ($module in $modules) {
+          $module = $module.Trim()
+          $sourcePath = Join-Path $sourceRoot $module
+          $destinationPath = Join-Path $destinationRoot $module
+
+          if (Test-Path $sourcePath) {
+            Write-Host "Copying module: $module"
+            Copy-Item -Path $sourcePath -Destination $destinationPath -Recurse -Force
+          } else {
+            Write-Error "Module '$module' not found"
+            exit 1
+          }
+        }
+
+        Write-Host "`n Modules copied successfully"
+      displayName: Copy Selected Modules
+
+    - powershell: |
+        # Create a clean git repo containing only selected modules
+        $pushRoot = "$(Pipeline.Workspace)\pushrepo"
+        if (Test-Path $pushRoot) { Remove-Item -Recurse -Force $pushRoot }
+        New-Item -ItemType Directory -Force -Path $pushRoot | Out-Null
+
+        Copy-Item -Path "$(Pipeline.Workspace)\s\selected-modules" -Destination "$pushRoot\selected-modules" -Recurse -Force
+        Set-Location $pushRoot
+        
+        Write-Host "Initializing Git repository..."
+        git init
+        
+        git config user.email "pipeline@azuredevops.com"
+        git config user.name "Azure Pipeline"
+        
+        # Push to GitHub repo
+        $repoUrl = "https://github.com/Kartavya0206/test.git"
+        
+        Write-Host "Repository URL: $repoUrl"
+        
+        # Add remote
+        # Use a GitHub token stored as secret pipeline variable `GITHUB_TOKEN`
+        if (-not $env:GITHUB_TOKEN) {
+          Write-Error "GITHUB_TOKEN is not set. Create a secret pipeline variable named GITHUB_TOKEN with repo write access."
+          exit 1
+        }
+        $authedRepoUrl = $repoUrl -replace "^https://", ("https://$($env:GITHUB_TOKEN)@")
+        git remote add origin $authedRepoUrl
+        
+        # Create branch
+        $branchName = "modules-$(Build.BuildId)"
+        git checkout -b $branchName
+        
+        # Add files
+        git add selected-modules/
+        
+        # Commit
+        Write-Host "`nCommitting changes..."
+        git commit -m "Pipeline Build $(Build.BuildId): Added modules ${{ parameters.modules }}"
+        
+        # Push
+        Write-Host "`nPushing to GitHub..."
+        git push origin $branchName
+        
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "`n========================================" -ForegroundColor Green
+            Write-Host " SUCCESS! " -ForegroundColor Green
+            Write-Host "========================================" -ForegroundColor Green
+            Write-Host "`nModules pushed to GitHub!" -ForegroundColor Cyan
+            Write-Host "`nView your modules at:" -ForegroundColor Yellow
+            Write-Host "https://github.com/Kartavya0206/test/tree/$branchName/selected-modules"
+            Write-Host "`n========================================" -ForegroundColor Green
+        } else {
+            Write-Error "Push failed"
+            exit 1
+        }
+      displayName: Push to Azure Repos
+      env:
+        GITHUB_TOKEN: $(GITHUB_TOKEN)
