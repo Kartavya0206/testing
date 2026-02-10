@@ -38,6 +38,7 @@ stages:
 
     - checkout: terraform-modules
       displayName: Checkout Terraform Modules
+      path: terraform-modules
 
     - powershell: |
         $client = "${{ parameters.client }}".Trim()
@@ -45,12 +46,26 @@ stages:
         if ($client) { Write-Host "Client: $client" }
         Write-Host "Modules needed for this client: $($modules -join ', ')"
 
-        # GitHub repo (terraform-modules) is under $(Pipeline.Workspace)\terraform-modules
-        # Self (Azure DevOps) repo is under $(Pipeline.Workspace)\s
-        $githubRoot = "$(Pipeline.Workspace)\terraform-modules"
+        $workspace = "$(Pipeline.Workspace)"
+        $selfRoot = "$workspace\s"
+
+        # Find GitHub repo root: try resource name first, then any folder that isn't "s"
+        $githubRoot = $null
+        if (Test-Path "$workspace\terraform-modules") { $githubRoot = "$workspace\terraform-modules" }
+        else {
+          Get-ChildItem -Path $workspace -Directory | Where-Object { $_.Name -ne "s" } | ForEach-Object { if (-not $githubRoot) { $githubRoot = $_.FullName } }
+        }
+        if (-not $githubRoot -or -not (Test-Path $githubRoot)) {
+          Write-Host "Workspace contents:"
+          Get-ChildItem -Path $workspace -Directory | ForEach-Object { Write-Host "  - $($_.Name)" }
+          Write-Error "GitHub repo checkout not found under $workspace. Expected folder 'terraform-modules' or repo name (e.g. 'testing')."
+          exit 1
+        }
+        Write-Host "Using GitHub repo at: $githubRoot"
+
         $sourceRoot = if (Test-Path (Join-Path $githubRoot "modules")) { Join-Path $githubRoot "modules" } else { $githubRoot }
         $clientSlug = if ($client) { $client -replace '\s+', '-' } else { "default" }
-        $destinationRoot = "$(Pipeline.Workspace)\s\clients\$clientSlug\modules"
+        $destinationRoot = "$selfRoot\clients\$clientSlug\modules"
 
         if (-not (Test-Path $sourceRoot)) {
             Write-Error "Modules directory not found at $sourceRoot"
