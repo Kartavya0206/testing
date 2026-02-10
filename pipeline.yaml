@@ -34,11 +34,13 @@ stages:
     steps:
     - checkout: self
       displayName: Checkout Self Repository
+      fetchDepth: 1
       persistCredentials: true
 
     - checkout: terraform-modules
       displayName: Checkout Terraform Modules
       path: terraform-modules
+      fetchDepth: 1
 
     - powershell: |
         $client = "${{ parameters.client }}".Trim()
@@ -97,23 +99,24 @@ stages:
     - powershell: |
         # Push selected modules into this Azure DevOps repo (self)
         $repoRoot = "$(Pipeline.Workspace)\s"
+        if (-not (Test-Path $repoRoot)) { Write-Error "Self repo not found at $repoRoot"; exit 1 }
         Set-Location $repoRoot
 
         git config user.email "pipeline@azuredevops.com"
         git config user.name "Azure Pipeline"
-
-        # Client-specific modules were copied in the previous step
-        git add clients/
+        git config core.askPass ""
 
         $clientSlug = ("${{ parameters.client }}".Trim() -replace '\s+', '-'); if (-not $clientSlug) { $clientSlug = "default" }
         $branchName = if ($clientSlug -ne "default") { "client-$clientSlug-modules-$(Build.BuildId)" } else { "modules-$(Build.BuildId)" }
+
         git checkout -b $branchName
+        git add clients/
 
         Write-Host "Committing changes..."
         git commit -m "Client ${{ parameters.client }}: Fetched modules ${{ parameters.modules }} from GitHub"
 
         Write-Host "Pushing to Azure Repos..."
-        git push origin $branchName
+        git push -u origin $branchName
 
         if ($LASTEXITCODE -eq 0) {
             Write-Host "`n========================================" -ForegroundColor Green
@@ -128,3 +131,5 @@ stages:
             exit 1
         }
       displayName: Push to Azure Repos
+      env:
+        GIT_TERMINAL_PROMPT: 0
