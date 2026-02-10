@@ -1,8 +1,13 @@
 trigger: none
 
 parameters:
+- name: client
+  displayName: "Client name"
+  type: string
+  default: ""
+
 - name: modules
-  displayName: "Modules to fetch (comma-separated)"
+  displayName: "Modules needed for this client (comma-separated)"
   type: string
   default: "network,compute"
 
@@ -29,20 +34,26 @@ stages:
     steps:
     - checkout: self
       displayName: Checkout Self Repository
+      persistCredentials: true
 
     - checkout: terraform-modules
       displayName: Checkout Terraform Modules
 
     - powershell: |
-        $modules = "${{ parameters.modules }}".Split(",")
-        Write-Host "Modules to fetch: $($modules -join ', ')"
+        $client = "${{ parameters.client }}".Trim()
+        $modules = "${{ parameters.modules }}".Split(",") | ForEach-Object { $_.Trim() }
+        if ($client) { Write-Host "Client: $client" }
+        Write-Host "Modules needed for this client: $($modules -join ', ')"
 
-        # In multi-repo checkout, the self repo lives under $(Pipeline.Workspace)\s
-        $sourceRoot = "$(Pipeline.Workspace)\s\modules"
-        $destinationRoot = "$(Pipeline.Workspace)\s\selected-modules"
+        # GitHub repo (terraform-modules) is under $(Pipeline.Workspace)\terraform-modules
+        # Self (Azure DevOps) repo is under $(Pipeline.Workspace)\s
+        $githubRoot = "$(Pipeline.Workspace)\terraform-modules"
+        $sourceRoot = if (Test-Path (Join-Path $githubRoot "modules")) { Join-Path $githubRoot "modules" } else { $githubRoot }
+        $clientSlug = if ($client) { $client -replace '\s+', '-' } else { "default" }
+        $destinationRoot = "$(Pipeline.Workspace)\s\clients\$clientSlug\modules"
 
         if (-not (Test-Path $sourceRoot)) {
-            Write-Error "Modules directory not found"
+            Write-Error "Modules directory not found at $sourceRoot"
             exit 1
         }
 
@@ -69,61 +80,36 @@ stages:
       displayName: Copy Selected Modules
 
     - powershell: |
-        # Create a clean git repo containing only selected modules
-        $pushRoot = "$(Pipeline.Workspace)\pushrepo"
-        if (Test-Path $pushRoot) { Remove-Item -Recurse -Force $pushRoot }
-        New-Item -ItemType Directory -Force -Path $pushRoot | Out-Null
+        # Push selected modules into this Azure DevOps repo (self)
+        $repoRoot = "$(Pipeline.Workspace)\s"
+        Set-Location $repoRoot
 
-        Copy-Item -Path "$(Pipeline.Workspace)\s\selected-modules" -Destination "$pushRoot\selected-modules" -Recurse -Force
-        Set-Location $pushRoot
-        
-        Write-Host "Initializing Git repository..."
-        git init
-        
         git config user.email "pipeline@azuredevops.com"
         git config user.name "Azure Pipeline"
-        
-        # Push to GitHub repo
-        $repoUrl = "https://github.com/Kartavya0206/test.git"
-        
-        Write-Host "Repository URL: $repoUrl"
-        
-        # Add remote
-        # Use a GitHub token stored as secret pipeline variable `GITHUB_TOKEN`
-        if (-not $env:GITHUB_TOKEN) {
-          Write-Error "GITHUB_TOKEN is not set. Create a secret pipeline variable named GITHUB_TOKEN with repo write access."
-          exit 1
-        }
-        $authedRepoUrl = $repoUrl -replace "^https://", ("https://$($env:GITHUB_TOKEN)@")
-        git remote add origin $authedRepoUrl
-        
-        # Create branch
-        $branchName = "modules-$(Build.BuildId)"
+
+        # Client-specific modules were copied in the previous step
+        git add clients/
+
+        $clientSlug = ("${{ parameters.client }}".Trim() -replace '\s+', '-'); if (-not $clientSlug) { $clientSlug = "default" }
+        $branchName = if ($clientSlug -ne "default") { "client-$clientSlug-modules-$(Build.BuildId)" } else { "modules-$(Build.BuildId)" }
         git checkout -b $branchName
-        
-        # Add files
-        git add selected-modules/
-        
-        # Commit
-        Write-Host "`nCommitting changes..."
-        git commit -m "Pipeline Build $(Build.BuildId): Added modules ${{ parameters.modules }}"
-        
-        # Push
-        Write-Host "`nPushing to GitHub..."
+
+        Write-Host "Committing changes..."
+        git commit -m "Client ${{ parameters.client }}: Fetched modules ${{ parameters.modules }} from GitHub"
+
+        Write-Host "Pushing to Azure Repos..."
         git push origin $branchName
-        
+
         if ($LASTEXITCODE -eq 0) {
             Write-Host "`n========================================" -ForegroundColor Green
-            Write-Host " SUCCESS! " -ForegroundColor Green
+            Write-Host " SUCCESS " -ForegroundColor Green
             Write-Host "========================================" -ForegroundColor Green
-            Write-Host "`nModules pushed to GitHub!" -ForegroundColor Cyan
-            Write-Host "`nView your modules at:" -ForegroundColor Yellow
-            Write-Host "https://github.com/Kartavya0206/test/tree/$branchName/selected-modules"
+            Write-Host "`nModules for this client fetched from GitHub and pushed to Azure DevOps repo." -ForegroundColor Cyan
+            Write-Host "`nBranch: $branchName" -ForegroundColor Yellow
+            Write-Host "Path in repo: clients/$clientSlug/modules/" -ForegroundColor Yellow
             Write-Host "`n========================================" -ForegroundColor Green
         } else {
             Write-Error "Push failed"
             exit 1
         }
       displayName: Push to Azure Repos
-      env:
-        GITHUB_TOKEN: $(GITHUB_TOKEN)
