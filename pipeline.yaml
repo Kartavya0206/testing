@@ -102,6 +102,10 @@ stages:
         if (-not (Test-Path $repoRoot)) { Write-Error "Self repo not found at $repoRoot"; exit 1 }
         Set-Location $repoRoot
 
+        # Allow Git to run when repo is owned by different user (e.g. NETWORK SERVICE vs Administrators)
+        $safeDir = $repoRoot -replace '\\', '/'
+        git config --global --add safe.directory $safeDir
+
         git config user.email "pipeline@azuredevops.com"
         git config user.name "Azure Pipeline"
         git config core.askPass ""
