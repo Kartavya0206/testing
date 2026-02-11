@@ -110,12 +110,13 @@ stages:
         git config user.name "Azure Pipeline"
         git config core.askPass ""
 
-        # Ensure we push to Azure Repos (origin may point at GitHub after multi-checkout)
-        $remoteUri = "$(Build.Repository.Uri)"
-        if ($env:SYSTEM_ACCESSTOKEN) {
+        # Use the remote URL already set by checkout: self (Azure Repos). Do NOT use
+        # Build.Repository.Uri here — when the pipeline runs from GitHub it points at GitHub.
+        $remoteUri = (git remote get-url origin).Trim()
+        if ($env:SYSTEM_ACCESSTOKEN -and ($remoteUri -match '^https://')) {
           $remoteUri = $remoteUri -replace '^https://', "https://build:$($env:SYSTEM_ACCESSTOKEN)@"
+          git remote set-url origin $remoteUri
         }
-        git remote set-url origin $remoteUri
 
         $clientSlug = ("${{ parameters.client }}".Trim() -replace '\s+', '-'); if (-not $clientSlug) { $clientSlug = "default" }
         $branchName = if ($clientSlug -ne "default") { "client-$clientSlug-modules-$(Build.BuildId)" } else { "modules-$(Build.BuildId)" }
