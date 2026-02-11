@@ -114,7 +114,9 @@ stages:
         # Build.Repository.Uri here — when the pipeline runs from GitHub it points at GitHub.
         $remoteUri = (git remote get-url origin).Trim()
         if ($env:SYSTEM_ACCESSTOKEN -and ($remoteUri -match '^https://')) {
-          $remoteUri = $remoteUri -replace '^https://', "https://build:$($env:SYSTEM_ACCESSTOKEN)@"
+          Add-Type -AssemblyName System.Web
+          $encodedToken = [System.Web.HttpUtility]::UrlEncode($env:SYSTEM_ACCESSTOKEN)
+          $remoteUri = $remoteUri -replace '^https://', "https://build:$encodedToken@"
           git remote set-url origin $remoteUri
         }
 
